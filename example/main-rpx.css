@@ -1,23 +1,27 @@
 .class {
     margin: -10px .5em;
+    margin: -20rpx .5em;
     padding: 5rem .5px;
+    padding: 5rem 1rpx;
     border: 3px solid black;
+    border: 6rpx solid black;
     font-size: 14px;
-    font-size: 0.875rem;
+    font-size: 28rpx;
     line-height: 20px;
-    line-height: 1.25rem;
+    line-height: 40rpx;
 }
 .class2 {
     font-size: 32px;
+    font-size: 64rpx;
     font-size: 2rem;
     line-height: 1em;
 }
 @media (min-width: 750px) {
     .class3 {
         font-size: 16px;
-        font-size: 1rem;
+        font-size: 32rpx;
         line-height: 22px;
-        line-height: 1.375rem;
+        line-height: 44rpx;
     }
 }
 

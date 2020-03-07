@@ -4,29 +4,22 @@ const filterPropList = require("./lib/filter-prop-list");
 const type = require("./lib/type");
 
 const defaults = {
-  rootValue: 16,
+  // rootValue: 16,
   unitPrecision: 5,
+  unit: "rpx",
   selectorBlackList: [],
-  propList: ["font", "font-size", "line-height", "letter-spacing"],
+  propBlackList: [],
   replace: true,
   mediaQuery: false,
   minPixelValue: 0,
-  exclude: null
+  exclude: null,
+  // 默认设计稿按照750宽，2倍图的出
+  transform: x => 2 * x
 };
 
-const legacyOptions = {
-  root_value: "rootValue",
-  unit_precision: "unitPrecision",
-  selector_black_list: "selectorBlackList",
-  prop_white_list: "propList",
-  media_query: "mediaQuery",
-  propWhiteList: "propList"
-};
-
-module.exports = postcss.plugin("postcss-pxtorem", options => {
-  convertLegacyOptions(options);
+module.exports = postcss.plugin("postcss-pxtorpx", options => {
   const opts = Object.assign({}, defaults, options);
-  const satisfyPropList = createPropListMatcher(opts.propList);
+  const unsatisfyPropList = createPropListMatcher(opts.propBlackList);
 
   return css => {
     const exclude = opts.exclude;
@@ -40,25 +33,22 @@ module.exports = postcss.plugin("postcss-pxtorem", options => {
       return;
     }
 
-    const rootValue =
-      typeof opts.rootValue === "function"
-        ? opts.rootValue(css.source.input)
-        : opts.rootValue;
-    const pxReplace = createPxReplace(
-      rootValue,
+    const pxReplaceFunc = createPxReplace(
+      opts.unit,
       opts.unitPrecision,
-      opts.minPixelValue
+      opts.minPixelValue,
+      opts.transform
     );
 
     css.walkDecls((decl, i) => {
       if (
         decl.value.indexOf("px") === -1 ||
-        !satisfyPropList(decl.prop) ||
+        unsatisfyPropList(decl.prop) ||
         blacklistedSelector(opts.selectorBlackList, decl.parent.selector)
       )
         return;
 
-      const value = decl.value.replace(pxRegex, pxReplace);
+      const value = decl.value.replace(pxRegex, pxReplaceFunc);
 
       // if rem unit already exists, do not add or replace
       if (declarationExists(decl.parent, decl.prop, value)) return;
@@ -73,40 +63,19 @@ module.exports = postcss.plugin("postcss-pxtorem", options => {
     if (opts.mediaQuery) {
       css.walkAtRules("media", rule => {
         if (rule.params.indexOf("px") === -1) return;
-        rule.params = rule.params.replace(pxRegex, pxReplace);
+        rule.params = rule.params.replace(pxRegex, pxReplaceFunc);
       });
     }
   };
 });
 
-function convertLegacyOptions(options) {
-  if (typeof options !== "object") return;
-  if (
-    ((typeof options["prop_white_list"] !== "undefined" &&
-      options["prop_white_list"].length === 0) ||
-      (typeof options.propWhiteList !== "undefined" &&
-        options.propWhiteList.length === 0)) &&
-    typeof options.propList === "undefined"
-  ) {
-    options.propList = ["*"];
-    delete options["prop_white_list"];
-    delete options.propWhiteList;
-  }
-  Object.keys(legacyOptions).forEach(key => {
-    if (Reflect.has(options, key)) {
-      options[legacyOptions[key]] = options[key];
-      delete options[key];
-    }
-  });
-}
-
-function createPxReplace(rootValue, unitPrecision, minPixelValue) {
+function createPxReplace(unit, unitPrecision, minPixelValue, transform) {
   return (m, $1) => {
     if (!$1) return m;
     const pixels = parseFloat($1);
     if (pixels < minPixelValue) return m;
-    const fixedVal = toFixed(pixels / rootValue, unitPrecision);
-    return fixedVal === 0 ? "0" : fixedVal + "rem";
+    const fixedVal = toFixed(transform(pixels), unitPrecision);
+    return fixedVal === 0 ? "0" : fixedVal + unit;
   };
 }
 

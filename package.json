@@ -1,14 +1,14 @@
 {
-  "name": "postcss-pxtorem",
-  "description": "A CSS post-processor that converts px to rem.",
-  "version": "5.1.1",
-  "author": "cuth",
+  "name": "postcss-pxtorpx-pro",
+  "description": "A CSS post-processor that converts px to rpx. 转换px单位为rpx，并允许指定任意单位及其转换函数，支持指定黑名单prop",
+  "version": "1.0.0",
+  "author": "Genuifx",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com:cuth/postcss-pxtorem.git"
+    "url": "git@github.com:Genuifx/postcss-pxtorpx-pro.git"
   },
-  "bugs": "https://github.com/cuth/postcss-pxtorem/issues",
+  "bugs": "https://github.com/Genuifx/postcss-pxtorpx-pro/issues",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
@@ -34,7 +34,8 @@
   },
   "keywords": [
     "css",
-    "rem",
+    "rpm",
+    "unit",
     "pixel",
     "px",
     "postcss",

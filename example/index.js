@@ -10,9 +10,9 @@ const options = {
 };
 const processedCss = postcss(pxtorem(options)).process(css).css;
 
-fs.writeFile("main-rem.css", processedCss, function(err) {
+fs.writeFile("main-rpx.css", processedCss, function(err) {
   if (err) {
     throw err;
   }
-  console.log("Rem file written.");
+  console.log("rpx file written.");
 });
