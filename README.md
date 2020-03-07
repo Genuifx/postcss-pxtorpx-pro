@@ -1,4 +1,4 @@
-# postcss-pxtorpx-pro 
+# postcss-pxtorpx-pro ![Node.js CI](https://github.com/Genuifx/postcss-pxtorpx-pro/workflows/Node.js%20CI/badge.svg) [![npm version](https://badge.fury.io/js/postcss-pxtorpx-pro.svg)](https://badge.fury.io/js/postcss-pxtorpx-pro)
 
 本项目从[pxtorem](https://github.com/cuth/postcss-pxtorem)基础上修改而来，转换px单位为rpx，并允许指定任意单位及其转换函数，支持指定黑名单prop。
 
