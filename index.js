@@ -1,4 +1,3 @@
-const postcss = require("postcss");
 const pxRegex = require("./lib/pixel-unit-regex");
 const filterPropList = require("./lib/filter-prop-list");
 const type = require("./lib/type");
@@ -17,30 +16,38 @@ const defaults = {
   transform: x => 2 * x
 };
 
-module.exports = postcss.plugin("postcss-pxtorpx", options => {
+module.exports = options => {
   const opts = Object.assign({}, defaults, options);
   const unsatisfyPropList = createPropListMatcher(opts.propBlackList);
+  const exclude = opts.exclude;
+  const pxReplaceFunc = createPxReplace(
+    opts.unit,
+    opts.unitPrecision,
+    opts.minPixelValue,
+    opts.transform
+  );
+  // use flag to exclude process for specific file.
+  let isExcludeFile = false;
 
-  return css => {
-    const exclude = opts.exclude;
-    const filePath = css.source.input.file;
-    if (
-      exclude &&
-      ((type.isFunction(exclude) && exclude(filePath)) ||
-        (type.isString(exclude) && filePath.indexOf(exclude) !== -1) ||
-        filePath.match(exclude) !== null)
-    ) {
-      return;
-    }
+  return {
+    postcssPlugin: "postcss-pxtorpx-pro",
+    Once(css) {
+      const filePath = css.source.input.file;
+      if (
+        exclude &&
+        ((type.isFunction(exclude) && exclude(filePath)) ||
+          (type.isString(exclude) && filePath.indexOf(exclude) !== -1) ||
+          (type.isRegExp(exclude) && filePath.match(exclude) !== null))
+      ) {
+        isExcludeFile = true;
+        return;
+      } else {
+        isExcludeFile = false;
+      }
+    },
+    Declaration(decl) {
+      if (isExcludeFile) return;
 
-    const pxReplaceFunc = createPxReplace(
-      opts.unit,
-      opts.unitPrecision,
-      opts.minPixelValue,
-      opts.transform
-    );
-
-    css.walkDecls((decl, i) => {
       if (
         decl.value.indexOf("px") === -1 ||
         unsatisfyPropList(decl.prop) ||
@@ -56,18 +63,21 @@ module.exports = postcss.plugin("postcss-pxtorpx", options => {
       if (opts.replace) {
         decl.value = value;
       } else {
-        decl.parent.insertAfter(i, decl.clone({ value: value }));
+        decl.cloneAfter({ value: value });
       }
-    });
+    },
+    AtRule(atRule) {
+      if (isExcludeFile) return;
 
-    if (opts.mediaQuery) {
-      css.walkAtRules("media", rule => {
-        if (rule.params.indexOf("px") === -1) return;
-        rule.params = rule.params.replace(pxRegex, pxReplaceFunc);
-      });
+      if (opts.mediaQuery && atRule.name === "media") {
+        if (atRule.params.indexOf("px") === -1) return;
+        atRule.params = atRule.params.replace(pxRegex, pxReplaceFunc);
+      }
     }
   };
-});
+};
+
+module.exports.postcss = true;
 
 function createPxReplace(unit, unitPrecision, minPixelValue, transform) {
   return (m, $1) => {
