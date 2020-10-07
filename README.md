@@ -6,7 +6,7 @@
 
 This repo is fork from [pxtorem](https://github.com/cuth/postcss-pxtorem), but more powerful than it. This plugin can transform pixels unit to any unit theoretically, which default transform to `rpx` unit.
 
-`rpx` is the unit make for developing mini-program, see [@wxa](https://wxajs.github.io/wxa/)
+`rpx` is the unit make for developing mini-program, see [@wxa](https://webank.gitee.io/wxa/)
 
 A plugin for [PostCSS](https://github.com/ai/postcss) that generates rpx units from pixel units.
 
