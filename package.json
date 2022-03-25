@@ -26,9 +26,9 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^6.8.0",
+    "eslint": "^8.11.0",
     "husky": "^4.2.3",
-    "jasmine-node": "^3.0.0",
+    "jasmine-node": "^1.16.0",
     "lint-staged": "^10.0.8",
     "prettier": "^1.19.1"
   },
@@ -43,6 +43,5 @@
     "px",
     "postcss",
     "postcss-plugin"
-  ],
-  "dependencies": {}
+  ]
 }
