@@ -1,7 +1,7 @@
 {
   "name": "postcss-pxtorpx-pro",
   "description": "A CSS post-processor that converts px to rpx. 转换px单位为rpx，并允许指定任意单位及其转换函数，支持指定黑名单prop",
-  "version": "1.0.0",
+  "version": "2.0.0-beta",
   "author": "Genuifx",
   "license": "MIT",
   "repository": {
@@ -32,6 +32,9 @@
     "lint-staged": "^10.0.8",
     "prettier": "^1.19.1"
   },
+  "peerDependencies": {
+    "postcss": "^8.1.1"
+  },
   "keywords": [
     "css",
     "rpm",
@@ -41,7 +44,5 @@
     "postcss",
     "postcss-plugin"
   ],
-  "dependencies": {
-    "postcss": "^7.0.27"
-  }
+  "dependencies": {}
 }

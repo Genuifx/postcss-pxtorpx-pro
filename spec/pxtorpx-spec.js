@@ -213,7 +213,6 @@ describe("replace", function() {
     };
     var processed = postcss(pxtorpx(options)).process(basicCSS).css;
     var expected = ".rule { font-size: 15px; font-size: 30rpx }";
-
     expect(processed).toBe(expected);
   });
 });
