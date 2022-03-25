@@ -1,7 +1,7 @@
 {
   "name": "postcss-pxtorpx-pro",
   "description": "A CSS post-processor that converts px to rpx. 转换px单位为rpx，并允许指定任意单位及其转换函数，支持指定黑名单prop",
-  "version": "2.0.0-beta",
+  "version": "2.0.0",
   "author": "Genuifx",
   "license": "MIT",
   "repository": {
